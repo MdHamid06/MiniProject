@@ -1,0 +1,2 @@
+# MiniProject
+Crop Price Prediction
