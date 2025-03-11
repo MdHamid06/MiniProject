@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>YouTube Sentiment Analysis</title>
+    <script>
+        async function getPrediction() {
+            let videoUrl = document.getElementById("videoUrl").value.trim();
+
+            if (!videoUrl) {
+                alert("Please enter a YouTube URL!");
+                return;
+            }
+
+            let response = await fetch("/predict", {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({ video_url: videoUrl }),  // ✅ Sending 'video_url' instead of 'movie_name'
+            });
+
+            let result = await response.json();
+            if (result.error) {
+                document.getElementById("result").innerText = "Error: " + result.error;
+            } else {
+                document.getElementById("result").innerText =
+                    "Total Comments: " + result.total_comments + "\n" +
+                    "Positive Sentiment: " + result.positive_percentage + "%\n" +
+                    "Overall Sentiment: " + result.overall_sentiment;
+            }
+        }
+    </script>
+</head>
+<body>
+    <h1>YouTube Video Sentiment Analysis</h1>
+    <p>Enter a YouTube Video URL (e.g., https://www.youtube.com/watch?v=dQw4w9WgXcQ)</p>
+    <input type="text" id="videoUrl" placeholder="Enter YouTube URL" />
+    <button onclick="getPrediction()">Predict</button>
+    <p id="result"></p>
+</body>
+</html>
